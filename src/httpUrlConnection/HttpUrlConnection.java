@@ -5,31 +5,40 @@ import java.net.*;
 
 public class HttpUrlConnection {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws MalformedURLException, IOException  {
 		
 		// specify the URL we're connecting to
 		URL url = new URL("http://www.luxsome.com"); 
 		
-		// open connection to url
-		HttpURLConnection urlCon = (HttpURLConnection) url.openConnection(); 
+		try {
+			// open connection to url
+			HttpURLConnection urlCon = (HttpURLConnection) url.openConnection(); 
 		
-		// create a buffer to read the connection into
-		BufferedReader buffer = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+			// create a buffer to read the connection into
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
 		
-        System.out.println("Received response code: " + urlCon.getResponseCode() + "\n");
+			System.out.println("Received response code: " + urlCon.getResponseCode() + "\n");
 		
-		String lineOfCode = null;
-		System.out.println("This page (" + url.toString() + ") contains these links:");
-		while((lineOfCode = buffer.readLine()) != null) { // loop through lines of code until the end
-			if (lineOfCode.toLowerCase().contains("<a href=")) {				
-				System.out.println(lineOfCode);
+			String lineOfCode = null;
+			System.out.println("This page (" + url.toString() + ") contains these links:");
+			while((lineOfCode = buffer.readLine()) != null) { // loop through lines of code until the end
+				if (lineOfCode.toLowerCase().contains("<a href=")) {				
+					System.out.println(lineOfCode);
+				}
 			}
-		}
 		
-		// close the buffer and connection
-		buffer.close();
-		urlCon.disconnect();
-
+			// close the buffer and connection
+			buffer.close();
+			urlCon.disconnect();
+			
+		} catch (MalformedURLException e) {
+            System.out.println("URL is malformed");
+            
+        } catch (UnknownHostException e) {
+            System.out.println("Unable to reach specified URL");
+            
+        }
+		
 	}
 
 }
